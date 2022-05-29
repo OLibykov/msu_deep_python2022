@@ -39,6 +39,59 @@ class TestLRUCache(unittest.TestCase):
         self.assertEqual(cache["c"], 3)
         self.assertEqual(cache["d"], 4)
 
+    def test_len_1(self):
+        cache = LRUCache(1)
+        cache["a"] = 1
+        self.assertEqual(cache["a"], 1)
+        cache["b"] = 2
+        self.assertEqual(cache["a"], None)
+        self.assertEqual(cache["b"], 2)
+        cache["c"] = 3
+        cache["d"] = 4
+        self.assertEqual(cache["a"], None)
+        self.assertEqual(cache["b"], None)
+        self.assertEqual(cache["c"], None)
+        self.assertEqual(cache["d"], 4)
+
+    def test_complete_displacement(self):
+        cache = LRUCache(3)
+        cache["a"] = 1
+        cache["b"] = 2
+        cache["c"] = 3
+        self.assertEqual(cache["a"], 1)
+        self.assertEqual(cache["b"], 2)
+        self.assertEqual(cache["c"], 3)
+        cache["d"] = 1
+        cache["e"] = 2
+        cache["f"] = 3
+        self.assertEqual(cache["a"], None)
+        self.assertEqual(cache["b"], None)
+        self.assertEqual(cache["c"], None)
+        self.assertEqual(cache["d"], 1)
+        self.assertEqual(cache["e"], 2)
+        self.assertEqual(cache["f"], 3)
+
+    def test_replacing_the_value(self):
+        cache = LRUCache(3)
+        cache["a"] = 1
+        cache["b"] = 2
+        cache["c"] = 3
+        self.assertEqual(cache["a"], 1)
+        self.assertEqual(cache["b"], 2)
+        self.assertEqual(cache["c"], 3)
+        cache["b"] = 4
+        self.assertEqual(cache["b"], 4)
+        cache["d"] = 1
+        self.assertEqual(cache["c"], 3)
+        self.assertEqual(cache["b"], 4)
+        self.assertEqual(cache["d"], 1)
+        cache["e"] = 2
+        self.assertEqual(cache["b"], 4)
+        self.assertEqual(cache["d"], 1)
+        self.assertEqual(cache["e"], 2)
+        cache["f"] = 3
+        self.assertEqual(cache["b"], None)
+
 
 if __name__ == "__main__":
     unittest.main()
