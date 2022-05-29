@@ -92,6 +92,31 @@ class TestLRUCache(unittest.TestCase):
         cache["f"] = 3
         self.assertEqual(cache["b"], None)
 
+    def test_replacing_the_value_without_get(self):
+        cache = LRUCache(3)
+        cache["a"] = 1
+        cache["b"] = 2
+        cache["c"] = 3
+        cache["b"] = 4
+        self.assertTrue("a" in cache.queue)
+        self.assertTrue("b" in cache.queue)
+        self.assertTrue("c" in cache.queue)
+        cache["d"] = 1
+        self.assertFalse("a" in cache.queue)
+        self.assertTrue("b" in cache.queue)
+        self.assertTrue("c" in cache.queue)
+        cache["e"] = 2
+        self.assertFalse("a" in cache.queue)
+        self.assertTrue("b" in cache.queue)
+        self.assertFalse("c" in cache.queue)
+        cache["f"] = 3
+        self.assertFalse("a" in cache.queue)
+        self.assertFalse("b" in cache.queue)
+        self.assertFalse("c" in cache.queue)
+        self.assertTrue("d" in cache.queue)
+        self.assertTrue("e" in cache.queue)
+        self.assertTrue("f" in cache.queue)
+
 
 if __name__ == "__main__":
     unittest.main()
